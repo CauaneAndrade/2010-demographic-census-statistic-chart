@@ -1,0 +1,190 @@
+<html lang="pt-br">
+  <head>
+    <meta charset="utf-8"/>
+  </head>
+<div>
+  <h1>
+    Gráficos da população residente, por situação do domicílio e sexo, segundo
+    as Grandes Regiões e as Unidades da Federação - 2010
+  </h1>
+  <p>
+    Fonte:
+    <a
+      href="https://www.ibge.gov.br/estatisticas/sociais/populacao/9662-censo-demografico-2010.html"
+    >
+      IBGE - Censo Demográfico (tabela 1.11)
+    </a>
+  </p>
+  Trabalho de Estatítica Aplicada
+  <br/>
+  <b>Desenvolvimento e implementação de algoritmos através de programas de computador para resolução de exercícios</b>
+  <br/>
+  Cauane E. A. Santos
+  <br/>
+  Professor: DAWILMAR GUIMARAES DE ARAUJO
+</div>
+<h2>Gráfico de Barras</h2>
+<div>
+  <label for="sexo">Sexo:</label>
+  <select name="sexo" id="sexo" onchange="getDataset()">
+    <option value="total">Todos</option>
+    <option value="homens">Homens</option>
+    <option value="mulheres">Mulheres</option>
+  </select>
+</div>
+<h2>Gráfico de Barras</h2>
+<div style="width: 600px">
+  <canvas id="myChart"></canvas>
+</div>
+<h2>Gráfico de Donut</h2>
+<div style="display: inline-block;">
+  <canvas id="myChart_doughnut1"></canvas>
+</div>
+<div style="display: inline-block; width: 25%"></div>
+<div style="display: inline-block;">
+  <canvas id="myChart_doughnut2"></canvas>
+</div>
+</html>
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+  var ctx = document.getElementById("myChart");
+  var ctx_2 = document.getElementById("myChart_doughnut1");
+  var ctx_3 = document.getElementById("myChart_doughnut2");
+
+  dic_r = {
+    backgroundColor: ["rgba(51, 213, 51, 0.2)"],
+    borderColor: ["rgba(51, 213, 51, 1)"],
+    borderWidth: 1,
+  };
+
+  dic_u = {
+    backgroundColor: ["rgba(48, 48, 181, 0.2)"],
+    borderColor: ["rgba(48, 48, 181, 1)"],
+    borderWidth: 1,
+  };
+
+  dic_r_donut = {
+    backgroundColor: ["rgba(238, 0, 0, 0.2)", "rgba(37, 0, 211, 0.2)", "rgba(0, 178, 20, 0.2)", "rgba(255, 255, 0, 0.2)", "rgba(255, 135, 0, 0.2)"],
+    borderColor: ["rgba(238, 0, 0, 1)", "rgba(37, 0, 211, 1)", "rgba(0, 178, 20, 1)", "rgba(255, 255, 0, 1)", "rgba(255, 135, 0, 1)"],
+    borderWidth: 1,
+  }
+
+  dic_u_donut = {
+    backgroundColor: ["rgba(238, 0, 0, 0.2)", "rgba(37, 0, 211, 0.2)", "rgba(0, 178, 20, 0.2)", "rgba(255, 255, 0, 0.2)", "rgba(255, 135, 0, 0.2)"],
+    borderColor: ["rgba(238, 0, 0, 1)", "rgba(37, 0, 211, 1)", "rgba(0, 178, 20, 1)", "rgba(255, 255, 0, 1)", "rgba(255, 135, 0, 1)"],
+    borderWidth: 1,
+  }
+
+  function getDatasetRural() {
+    var val = document.getElementById("sexo");
+    var opt = val.options[val.selectedIndex].value;
+    if (opt === "total") {
+      dic_r["label"] = "Rural - Total";
+      dic_r["data"] = [4199945, 14260704, 5668232, 4125995, 1575131];
+    } else if (opt === "homens") {
+      dic_r["label"] = "Rural - homens";
+      dic_r["data"] = [2267542, 7382318, 3024116, 2161121, 861719];
+    } else if (opt === "mulheres") {
+      dic_r["label"] = "Rural - mulheres";
+      dic_r["data"] = [1932403, 6878386, 2644116, 1964874, 713412];
+    }
+    dic_r_donut["data"] = dic_r["data"];
+    return dic_r
+  }
+
+  function getDatasetUrbano() {
+    var val = document.getElementById("sexo");
+    var opt = val.options[val.selectedIndex].value;
+    if (opt === "total") {
+      dic_u["label"] = "Urbana - Total";
+      dic_u["data"] = [11664509, 38821246, 74696178, 23260896, 12482963];
+    } else if (opt === "homens") {
+      dic_u["label"] = "Urbana - homens";
+      dic_u["data"] = [5737373, 18526728, 36052531, 11275290, 6118252];
+    } else if (opt === "mulheres") {
+      dic_u["label"] = "Urbana - mulheres";
+      dic_u["data"] = [5927136, 20294518, 38643647, 11985606, 6364711];
+    }
+    dic_u_donut["data"] = dic_u["data"];
+    return dic_u
+  }
+
+
+  r = getDatasetRural();
+  u = getDatasetUrbano();
+  var myChart_bar = new Chart(ctx, {
+    type: "bar",
+    data: {
+      labels: ["Norte", "Nordeste", "Sudeste", "Sul", "Centro-Oeste"],
+      datasets: [r, u],
+    },
+    options: {
+      indexAxis: "y",
+      elements: {
+        bar: {
+          borderWidth: 2,
+        },
+      },
+      responsive: true,
+      plugins: {
+        legend: {
+          position: "right",
+        },
+        title: {
+          display: true,
+          text: "População residente, por situação do domicílio e sexo, segundo as Grandes Regiões e as Unidades da Federação",
+        },
+      },
+    },
+  });
+
+  var myChart_doughnut = new Chart(ctx_2, {
+    type: "doughnut",
+    data: {
+      labels: ["Norte", "Nordeste", "Sudeste", "Sul", "Centro-Oeste"],
+      datasets: [dic_r_donut]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          position: "right",
+        },
+        title: {
+          display: true,
+          text: "População RURAL, por situação do domicílio e sexo",
+        },
+      },
+    },
+  });
+
+  var myChart_doughnut2 = new Chart(ctx_3, {
+    type: "doughnut",
+    data: {
+      labels: ["Norte", "Nordeste", "Sudeste", "Sul", "Centro-Oeste"],
+      datasets: [dic_u_donut],
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          position: "right",
+        },
+        title: {
+          display: true,
+          text: "População URBANA, por situação do domicílio e sexo",
+        },
+      },
+    },
+  });
+
+  function getDataset() {
+    getDatasetRural(); getDatasetUrbano();
+    myChart_bar.update();
+    myChart_doughnut.update();
+    myChart_doughnut2.update();
+  }
+</script>
